@@ -47,3 +47,4 @@ _ReSharper*/
 # Office Temp Files
 ~$*
 
+dotnet/packages/
