@@ -22,36 +22,37 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="/Content/ie8.css" /><![endif]-->
     <!--[if lte IE 7]><link rel="stylesheet" href="/Content/ie7.css" /><![endif]-->
 </head>
-<body class="homepage">
-    <div id="header-wrapper">
-        <div class="5grid-layout">
-            <div class="row">
-                <div class="12u">
-                    <header id="header">
-                        <div id="logo">
-                            <h1><a href="#" class="mobileUI-site-name">getanewpassword.com</a></h1>
-                        </div>
-                    </header>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="banner-wrapper">
-        <div class="5grid-layout">
-            <div class="row">
-                <div class="12u">
-                    <div id="banner" class="box">
-                        <div class="5grid">
-                            @RenderBody()
-                        </div>
+    <body class="homepage">
+        @Html.Partial("_GoogleAnalytics")
+        <div id="header-wrapper">
+            <div class="5grid-layout">
+                <div class="row">
+                    <div class="12u">
+                        <header id="header">
+                            <div id="logo">
+                                <h1><a href="#" class="mobileUI-site-name">getanewpassword.com</a></h1>
+                            </div>
+                        </header>
                     </div>
                 </div>
             </div>
-            <p>
-                Inspired by <a href="http://xkcd.com/936/" rel="nofollow">xkcd</a> and <a href="http://correcthorsebatterystaple.net/" rel="nofollow">CorrectHorseBatteryStaple.net</a>
-            </p>
         </div>
-    </div>
-    <script src="/content/site.js" async="async"></script>
-</body>
+        <div id="banner-wrapper">
+            <div class="5grid-layout">
+                <div class="row">
+                    <div class="12u">
+                        <div id="banner" class="box">
+                            <div class="5grid">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    Inspired by <a href="http://xkcd.com/936/" rel="nofollow">xkcd</a> and <a href="http://correcthorsebatterystaple.net/" rel="nofollow">CorrectHorseBatteryStaple.net</a>
+                </p>
+            </div>
+        </div>
+        <script src="/content/site.js" async="async"></script>
+    </body>
 </html>
