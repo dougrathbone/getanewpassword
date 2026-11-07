@@ -15,7 +15,15 @@ The sites must contain the following functionality:
 Languages to be used
 ---------------------
 
- - C# - ASP.Net MVC + Web API + MS Test (completed).
+ - C# - ASP.NET Core 8 MVC + Web API + MSTest (completed).
  - *Ruby - Ruby on Rails*
  - *Java (Play framework*
  - *Javascript (Node.js)*
+
+Build and deploy (.NET)
+-----------------------
+
+    dotnet test dotnet/GANP.sln
+    dotnet run --project dotnet/GANP.Website
+
+GitHub Actions builds and tests every pull request (`ci.yml`) and deploys `master` to Azure App Service on Linux (`deploy.yml`) using OIDC federated login. Required repository secrets: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`.

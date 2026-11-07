@@ -1,6 +1,5 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
-using System.Web;
 
 namespace GANP.Website.Services
 {
@@ -9,20 +8,29 @@ namespace GANP.Website.Services
         string GetRelativePath(string path);
     }
 
+    /// <summary>Resolves paths relative to the folder containing the executing assembly.</summary>
     public class FilePathService : IFilePathService
     {
         public string GetRelativePath(string path)
         {
-            var binaryLocation = Assembly.GetExecutingAssembly().Location;
-            var parentPath = binaryLocation.Substring(0, binaryLocation.LastIndexOf('\\'));
+            var parentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(parentPath, path);
         }
     }
-    public class HttpFilePathService : IFilePathService
+
+    /// <summary>Resolves paths relative to the web app content root (works on Windows and Linux).</summary>
+    public class ContentRootFilePathService : IFilePathService
     {
+        private readonly IWebHostEnvironment _environment;
+
+        public ContentRootFilePathService(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
         public string GetRelativePath(string path)
         {
-            return HttpContext.Current.Server.MapPath(path);
+            return Path.Combine(_environment.ContentRootPath, path.TrimStart('\\', '/'));
         }
     }
 }

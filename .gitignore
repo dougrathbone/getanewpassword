@@ -48,3 +48,9 @@ _ReSharper*/
 ~$*
 
 dotnet/packages/
+
+# .NET build output
+bin/
+obj/
+publish/
+*.trx

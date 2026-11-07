@@ -1,15 +1,15 @@
-﻿namespace GANP.Website.Models
+namespace GANP.Website.Models
 {
     public class GeneratePasswordOptions
     {
-        public int MinLength = 25;
+        public int MinLength { get; set; } = 25;
 
-        public int MinWords = 4;
+        public int MinWords { get; set; } = 4;
 
-        public string Separator = "-";
+        public string Separator { get; set; } = "-";
 
-        public bool AddUppercase = true;
+        public bool AddUppercase { get; set; } = true;
 
-        public bool AddNumber = true;
+        public bool AddNumber { get; set; } = true;
     }
 }

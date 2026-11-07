@@ -1,24 +1,34 @@
-﻿using System.Web.Http;
 using GANP.Website.Models;
 using GANP.Website.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GANP.Website.Controllers
 {
-    public class GeneratePasswordController : ApiController
+    [ApiController]
+    [Route("api/generatepassword")]
+    [Produces("application/json", "application/xml")]
+    public class GeneratePasswordController : ControllerBase
     {
-        private IGeneratePasswordService _service;
-
-        public GeneratePasswordController()
-        {
-            _service = new GeneratePasswordService(new FileOperationService(), new HttpFilePathService());
-        }
+        private readonly IGeneratePasswordService _service;
 
         public GeneratePasswordController(IGeneratePasswordService service)
         {
             _service = service;
         }
 
-        public GeneratePasswordModel GetAllProducts(GeneratePasswordOptions options)
+        [HttpGet]
+        public GeneratePasswordModel Get([FromQuery] GeneratePasswordOptions options)
+        {
+            return Build(options);
+        }
+
+        [HttpPost]
+        public GeneratePasswordModel Post([FromBody] GeneratePasswordOptions options = null)
+        {
+            return Build(options);
+        }
+
+        private GeneratePasswordModel Build(GeneratePasswordOptions options)
         {
             var requestOptions = options ?? new GeneratePasswordOptions();
             var password = _service.GeneratePassword(requestOptions);

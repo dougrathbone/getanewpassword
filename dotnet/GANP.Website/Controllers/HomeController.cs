@@ -1,31 +1,26 @@
-﻿using System.Web.Mvc;
 using GANP.Website.Models;
 using GANP.Website.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GANP.Website.Controllers
 {
     public class HomeController : Controller
     {
-        private IFileOperationService _reader;
-        private IGeneratePasswordService _service;
-        public HomeController()
-        {
-            _reader = new FileOperationService();
-            _service = new GeneratePasswordService(_reader,new HttpFilePathService());
-        }
+        private readonly IGeneratePasswordService _service;
 
-        public HomeController(IFileOperationService fileService, IGeneratePasswordService service)
+        public HomeController(IGeneratePasswordService service)
         {
-            _reader = fileService;
             _service = service;
         }
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
             var options = new GeneratePasswordOptions();
             var newPassword = _service.GeneratePassword(options);
-            var model = new GeneratePasswordModel(newPassword, options);
-            return View(model);
+            return View(new GeneratePasswordModel(newPassword, options));
         }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error() => View();
     }
 }
