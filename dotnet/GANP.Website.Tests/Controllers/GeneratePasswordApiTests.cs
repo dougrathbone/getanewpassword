@@ -22,7 +22,7 @@ namespace GANP.Website.Tests.Controllers
 
             response.EnsureSuccessStatusCode();
             StringAssert.Contains(response.Content.Headers.ContentType.ToString(), "json");
-            StringAssert.Contains(await response.Content.ReadAsStringAsync(), "\"password\"");
+            StringAssert.Contains(await response.Content.ReadAsStringAsync(), "\"Password\"");
         }
 
         [TestMethod]
