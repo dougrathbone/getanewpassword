@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Security.Cryptography;
 using System.Text;
 using GANP.Website.Models;
 
@@ -11,41 +12,38 @@ namespace GANP.Website.Services
         string BuildPassword(string[] wordsArray, GeneratePasswordOptions options);
 
         string SelectRandomWord(string[] wordsArray, bool pascalCase);
-
     }
+
     public class GeneratePasswordService : IGeneratePasswordService
     {
-        private IFileOperationService _reader;
-        private IFilePathService _pathService;
-        private Random _random;
+        private const string WordListPath = "App_Data/wordlist.txt";
 
-        public GeneratePasswordService()
-        {
-            _reader = new FileOperationService();
-            _pathService = new HttpFilePathService();
-            _random = new Random((int)DateTime.UtcNow.Ticks);
-        }
+        private readonly IFileOperationService _reader;
+        private readonly IFilePathService _pathService;
+        private static string[] _wordCache;
+        private static readonly object CacheLock = new object();
 
         public GeneratePasswordService(IFileOperationService fileOperationService, IFilePathService pathService)
         {
             _reader = fileOperationService;
             _pathService = pathService;
-            _random = new Random((int)DateTime.UtcNow.Ticks);
         }
-
-        private static string[] _wordCache;
 
         public string GeneratePassword(GeneratePasswordOptions options)
         {
-            if (_wordCache == null) loadWords();
+            if (_wordCache == null) LoadWords();
 
             return BuildPassword(_wordCache, options);
         }
 
-        private void loadWords()
+        private void LoadWords()
         {
-            var words = _reader.ReadAllText(_pathService.GetRelativePath("\\App_Data\\wordlist.txt"));
-            _wordCache = words.Split(',');
+            lock (CacheLock)
+            {
+                if (_wordCache != null) return;
+                var words = _reader.ReadAllText(_pathService.GetRelativePath(WordListPath));
+                _wordCache = words.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            }
         }
 
         public string BuildPassword(string[] wordsArray, GeneratePasswordOptions options)
@@ -55,15 +53,16 @@ namespace GANP.Website.Services
             {
                 output.Append(SelectRandomWord(wordsArray, options.AddUppercase) + options.Separator);
             }
-            if (options.AddNumber) output.Append(_random.Next(0, 9));
+            // cryptographically secure digit 0-9
+            if (options.AddNumber) output.Append(RandomNumberGenerator.GetInt32(0, 10));
             return output.ToString();
         }
 
         public string SelectRandomWord(string[] wordsArray, bool pascalCase)
         {
-            var rand = _random.Next(0, wordsArray.Length);
-            var word = wordsArray[rand].Trim();
-            return char.ToUpper(word[0]) + word.Substring(1, word.Length-1);
+            // cryptographically secure selection (System.Random is predictable and unsuitable for passwords)
+            var word = wordsArray[RandomNumberGenerator.GetInt32(0, wordsArray.Length)].Trim();
+            return char.ToUpper(word[0]) + word.Substring(1);
         }
     }
 }

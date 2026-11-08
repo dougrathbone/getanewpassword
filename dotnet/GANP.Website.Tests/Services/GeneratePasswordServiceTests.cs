@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GANP.Website.Models;
 using GANP.Website.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,21 +36,19 @@ namespace GANP.Website.Tests.Services
         [TestMethod]
         public void GeneratePasswordService_RandomWord_PicksRandomWords()
         {
-            var service = new GeneratePasswordService();
-            var words = new string[5]
-            {
-                "word1", "word2", "word3", "word4", "word5"
-            };
-            var result = service.SelectRandomWord(words, false);
-            var secondResult = service.SelectRandomWord(words, false);
+            var service = new GeneratePasswordService(new Mock<IFileOperationService>().Object, new FilePathService());
+            var words = new[] { "word1", "word2", "word3", "word4", "word5" };
 
-            Assert.IsFalse(result == secondResult);
+            var picked = Enumerable.Range(0, 200).Select(_ => service.SelectRandomWord(words, false)).Distinct().Count();
+
+            // 200 draws from 5 words: probability of seeing a single word is vanishingly small
+            Assert.IsTrue(picked > 1);
         }
 
         [TestMethod]
         public void GeneratePasswordService_RandomWord_UpperCasesWords()
         {
-            var service = new GeneratePasswordService();
+            var service = new GeneratePasswordService(new Mock<IFileOperationService>().Object, new FilePathService());
             var words = new string[5]
             {
                 "word1", "word2", "word3", "word4", "word5"

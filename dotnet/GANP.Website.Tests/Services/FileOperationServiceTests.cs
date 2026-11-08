@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using GANP.Website.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,7 +24,7 @@ namespace GANP.Website.Tests.Services
             var service = new FileOperationService();
 
             // should throw exception
-            var text = service.ReadAllText(@"C:\filethatdoesntexist.txt");
+            var text = service.ReadAllText(Path.Combine(Path.GetTempPath(), "filethatdoesntexist.txt"));
         }
     }
 }

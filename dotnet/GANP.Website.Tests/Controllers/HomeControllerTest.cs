@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GANP.Website;
 using GANP.Website.Controllers;
+using GANP.Website.Models;
+using GANP.Website.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace GANP.Website.Tests.Controllers
 {
@@ -13,16 +11,16 @@ namespace GANP.Website.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
-        public void Index()
+        public void Index_ReturnsViewWithPassword()
         {
-            // Arrange
-            HomeController controller = new HomeController();
+            var service = new Mock<IGeneratePasswordService>();
+            service.Setup(x => x.GeneratePassword(It.IsAny<GeneratePasswordOptions>())).Returns("Word-Word-Word-Word-1");
+            var controller = new HomeController(service.Object);
 
-            // Act
-            ViewResult result = controller.Index() as ViewResult;
+            var result = controller.Index() as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
+            Assert.AreEqual("Word-Word-Word-Word-1", ((GeneratePasswordModel)result.Model).Password);
         }
     }
 }
