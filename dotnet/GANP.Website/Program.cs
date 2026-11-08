@@ -3,6 +3,7 @@ using GANP.Website.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews()
+    .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = null) // keep PascalCase JSON (Password) as the old Web API and site.js expect
     .AddXmlSerializerFormatters(); // API returns JSON or XML depending on the Accept header
 
 builder.Services.AddSingleton<IFileOperationService, FileOperationService>();
